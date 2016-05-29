@@ -65,9 +65,10 @@ func NewHostList() *HostList {
 }
 
 type Host struct {
-	Name string
-	IP   string
-	Mac  string
+	Name      string
+	IP        string
+	Mac       string
+	FirstSeen time.Time
 }
 
 func (h Host) String() string {
@@ -75,11 +76,11 @@ func (h Host) String() string {
 	if h.Mac != "" {
 		mac = "[" + h.Mac + "]" + mac
 	}
-	return h.Name + "(" + h.IP + ")" + mac
+	return h.Name + "(" + h.IP + ")" + mac + " @ " + h.FirstSeen.Format(time.UnixDate)
 }
 
 func readHost(words []string) Host {
-	host := Host{Name: words[0], IP: words[1][1 : len(words[1])-1], Mac: words[3]}
+	host := Host{Name: words[0], IP: words[1][1 : len(words[1])-1], Mac: words[3], FirstSeen: time.Now()}
 	if host.Mac[0] == '(' {
 		host.Mac = ""
 	}
