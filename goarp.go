@@ -26,7 +26,7 @@ import (
 )
 
 type HostList struct {
-	Hosts []Host
+	Hosts []*Host
 	lock  sync.Locker
 }
 
@@ -39,13 +39,14 @@ func (h *HostList) Add(host Host) bool {
 	found := false
 	for _, targetHost := range h.Hosts {
 		if targetHost.Name == host.Name && targetHost.IP == host.IP {
+			targetHost.LastSeen = time.Now() // wont work as this is a copy of the object
 			found = true
 		}
 	}
 	if found {
 		return false
 	}
-	h.Hosts = append(h.Hosts, host)
+	h.Hosts = append(h.Hosts, &host)
 	return true
 }
 
@@ -61,7 +62,7 @@ func (h *HostList) Size() int {
 }
 
 func NewHostList() *HostList {
-	return &HostList{[]Host{}, &sync.Mutex{}}
+	return &HostList{[]*Host{}, &sync.Mutex{}}
 }
 
 type Host struct {
@@ -69,6 +70,7 @@ type Host struct {
 	IP        string
 	Mac       string
 	FirstSeen time.Time
+	LastSeen  time.Time
 }
 
 func (h Host) String() string {
@@ -76,7 +78,11 @@ func (h Host) String() string {
 	if h.Mac != "" {
 		mac = "[" + h.Mac + "]" + mac
 	}
-	return h.Name + "(" + h.IP + ")" + mac + " @ " + h.FirstSeen.Format(time.UnixDate)
+	lastSeen := ""
+	if !h.LastSeen.IsZero() {
+		lastSeen = " ==> " + h.LastSeen.Format(time.UnixDate)
+	}
+	return h.Name + "(" + h.IP + ")" + mac + " @ " + h.FirstSeen.Format(time.UnixDate) + lastSeen
 }
 
 func readHost(words []string) Host {
