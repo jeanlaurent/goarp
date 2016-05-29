@@ -25,11 +25,13 @@ import (
 	"time"
 )
 
+// HostList maintain a list of Hosts
 type HostList struct {
 	Hosts []*Host
 	lock  sync.Locker
 }
 
+// Add a Host to the list if not already there.
 func (h *HostList) Add(host Host) bool {
 	h.lock.Lock()
 	defer h.lock.Unlock()
@@ -50,6 +52,7 @@ func (h *HostList) Add(host Host) bool {
 	return true
 }
 
+// Print to stdout the hostlist
 func (h *HostList) Print() {
 	fmt.Println("Host found", len(h.Hosts))
 	for _, host := range h.Hosts {
@@ -57,14 +60,17 @@ func (h *HostList) Print() {
 	}
 }
 
+// Size returns the number of element of the list
 func (h *HostList) Size() int {
 	return len(h.Hosts)
 }
 
+// NewHostList created an empty HostList
 func NewHostList() *HostList {
 	return &HostList{[]*Host{}, &sync.Mutex{}}
 }
 
+// Host is a registered host
 type Host struct {
 	Name      string
 	IP        string
