@@ -11,6 +11,7 @@ type Device struct {
 	FirstSeen  time.Time
 	LastSeen   time.Time
 	CName      string
+	Vendor     string
 }
 
 type Devices struct {

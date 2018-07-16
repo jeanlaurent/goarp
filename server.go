@@ -16,6 +16,7 @@ type Server struct {
 func (server *Server) start() {
 	router := mux.NewRouter()
 	router.HandleFunc("/api/devices", errorHandler(server.allDevices)).Methods("GET")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./app/")))
 
 	http.Handle("/", router)
 
@@ -29,6 +30,7 @@ func (server *Server) allDevices(response http.ResponseWriter, request *http.Req
 		return err
 	}
 	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Access-Control-Allow-Origin", "*") // must be behind a dev mode flag
 	response.Write(json)
 	return nil
 }

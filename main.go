@@ -146,7 +146,7 @@ func readARP(handle *pcap.Handle, iface *net.Interface, stop chan struct{}, macV
 				cname = cnames[0]
 			}
 			// end dns resolution
-			device := Device{macAddress.String(), IP.String(), time.Now(), time.Now(), cname}
+			device := Device{macAddress.String(), IP.String(), time.Now(), time.Now(), cname, vendor}
 			if !devices.exist(macAddress.String()) {
 				log.Printf("new devices IP %v is at %v %v (%v) ", IP, macAddress, identifier, vendor)
 			} else {
