@@ -1,9 +1,15 @@
 dep:
 	yarn install
 
-run:
-	yarn build
-	sudo go run *.go	
+css:
+	cp node_modules/bootstrap/dist/css/bootstrap.min.css app/style/bootstrap/css/
 
-dev:
+build: css
+	yarn build
+	go build *.go
+
+runhttp: css
 	yarn dev
+
+run:
+	sudo go run *.go	

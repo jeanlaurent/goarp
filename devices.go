@@ -12,6 +12,7 @@ type Device struct {
 	LastSeen   time.Time
 	CName      string
 	Vendor     string
+	SurName    string
 }
 
 type Devices struct {
@@ -46,12 +47,11 @@ func (d *Devices) len() int {
 
 func (d *Devices) all() []Device {
 	values := make([]Device, 0, len(d.list))
-
+	d.mutex.RLock()
+	defer d.mutex.RUnlock()
 	for _, value := range d.list {
 		values = append(values, value)
 	}
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
 	return values
 }
 

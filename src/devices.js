@@ -18,9 +18,38 @@ export default class Devices extends React.Component {
 
   render() {
     return (
-      <ul>
-    { this.state.devices.map(device => <li key={device.MacAddress}>{device.CName} - {device.LastIP} ({device.Vendor})</li>)}
-      </ul>
+      <table className="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>IP</th>
+            <th>MacAddress</th>
+            <th>Vendor</th>
+            <th>Last Seen</th>
+          </tr>
+        </thead>
+        <tbody>
+    {       
+      this.state.devices.map(device => {
+          var identifier = device.CName;
+          if (device.CName === "") {
+            identifier = device.SurName;
+          }
+          if (identifier == "" ) {
+            identifier = "-";
+          }
+          return <tr key={device.MacAddress}>
+            <td>{identifier}</td>
+            <td>{device.LastIP}</td>
+            <td>{device.MacAddress}</td>
+            <td>{device.Vendor}</td>
+            <td>{device.LastSeen}</td>
+              </tr>
+        }
+      )
+    }
+      </tbody>
+      </table>
     )
   }
 }
